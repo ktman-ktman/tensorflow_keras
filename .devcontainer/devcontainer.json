@@ -1,0 +1,30 @@
+{
+    "name": "tensorflow_keras",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "settings": {
+        "terminal.integrated.profiles.linux": {
+            "fish (login)": {
+                "path": "fish",
+                "args": [
+                    "-l"
+                ]
+            }
+        }
+    },
+    "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "njpwerner.autodocstring"
+    ],
+    "postCreateCommand": "poetry install",
+    // for gpu
+    "runArgs": [
+        "--gpus",
+        "all"
+    ]
+}
