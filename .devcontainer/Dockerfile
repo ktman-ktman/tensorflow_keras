@@ -5,6 +5,7 @@ RUN apt-get update \
     curl \
     fish \
     git \
+    graphviz \
     htop \
     neovim \
     python3-dev \
