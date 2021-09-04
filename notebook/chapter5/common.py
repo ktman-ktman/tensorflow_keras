@@ -88,3 +88,74 @@ def create_sequential_model():
     model.add(tf.keras.layers.Dense(10, activation="softmax"))
 
     return model
+
+
+def create_functional_model():
+    inputs = tf.keras.Input(shape=(32, 32, 3))
+    x = tf.keras.layers.Conv2D(
+        32, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="relu"
+    )(inputs)
+    x = tf.keras.layers.Conv2D(
+        32, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="relu"
+    )(x)
+    x = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = tf.keras.layers.Conv2D(
+        64, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="relu"
+    )(x)
+    x = tf.keras.layers.Conv2D(
+        64, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="relu"
+    )(x)
+    x = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+    x = tf.keras.layers.Dropout(0.25)(x)
+    x = tf.keras.layers.Flatten()(x)
+    x = tf.keras.layers.Dense(512, activation="relu")(x)
+    x = tf.keras.layers.Dropout(0.5)(x)
+    outputs = tf.keras.layers.Dense(10, activation="softmax")(x)
+
+    model = tf.keras.Model(inputs=inputs, outputs=outputs)
+
+    return model
+
+
+class SubclassModelCreator(tf.keras.Model):
+    def __init__(self):
+        super().__init__()
+
+        self.conv2d_1 = tf.keras.layers.Conv2D(
+            32,
+            input_shape=(32, 32, 3),
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            padding="same",
+            activation="relu",
+        )
+        self.conv2d_2 = tf.keras.layers.Conv2D(
+            32, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="relu"
+        )
+        self.max_pooling_2d_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))
+        self.conv2d_3 = tf.keras.layers.Conv2D(
+            64, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="relu"
+        )
+        self.conv2d_4 = tf.keras.layers.Conv2D(
+            64, kernel_size=(3, 3), strides=(1, 1), padding="same", activation="relu"
+        )
+        self.max_pooling_2d_2 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))
+        self.dropout_1 = tf.keras.layers.Dropout(0.25)
+        self.flatten = tf.keras.layers.Flatten()
+        self.dense_1 = tf.keras.layers.Dense(512, activation="relu")
+        self.dropout_2 = tf.keras.layers.Dropout(0.5)
+        self.dense_2 = tf.keras.layers.Dense(10, activation="softmax")
+
+    def call(self, x):
+        x = self.conv2d_1(x)
+        x = self.conv2d_2(x)
+        x = self.max_pooling_2d_1(x)
+        x = self.conv2d_3(x)
+        x = self.conv2d_4(x)
+        x = self.max_pooling_2d_2(x)
+        x = self.dropout_1(x)
+        x = self.flatten(x)
+        x = self.dense_1(x)
+        x = self.dropout_2(x)
+        x = self.dense_2(x)
+        return x
